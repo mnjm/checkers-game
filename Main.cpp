@@ -2,7 +2,7 @@
 int main(int argc,char **argv)
 {
 	glutInit(&argc,argv);
-	glutInitDisplayMode(GL_DOUBLE | GL_RGBA);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(700,700);
 	glutInitWindowPosition(15, 15);
 	glutCreateWindow("Checker's Game");

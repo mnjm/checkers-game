@@ -4,19 +4,19 @@
 bool is_first_time = true;
 Board board_obj;
 Pawn pawns[24];
-extern int board[8][4]; // Defined in Objects.h Header file.
+int board[8][4] = {{-1},{-1},{-1},{-1},{-1},{-1},{-1},{-1}};
 void init()
 {
 	int count = 0;
 	// Player 1
 	for(int i = 0; i<4 ; i++)
 	{
-		pawns[count++].create_pawn(0, i, 1);
-		pawns[count++].create_pawn(1, i, 1);
-		pawns[count++].create_pawn(2, i, 1);
-		pawns[count++].create_pawn(5, i, 2);
-		pawns[count++].create_pawn(6, i, 2);
-		pawns[count++].create_pawn(7, i, 2);
+		pawns[count++].create_pawn( i, 0, 1); board[0][i] = count - 1;
+		pawns[count++].create_pawn( i, 1, 1); board[1][i] = count - 1;
+		pawns[count++].create_pawn( i, 2, 1); board[2][i] = count - 1;
+		pawns[count++].create_pawn( i, 5, 2); board[5][i] = count - 1;
+		pawns[count++].create_pawn( i, 6, 2); board[6][i] = count - 1;
+		pawns[count++].create_pawn( i, 7, 2); board[7][i] = count - 1;
 	}
 }
 void display_event_handler()

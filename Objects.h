@@ -1,16 +1,6 @@
 #include<GL/glut.h>
 #include<math.h>
 #define TWO_PI 6.28571428f
-int board[8][4] = {
-	{  5 , 11 , 17 , 23 },
-	{  4 , 10 , 16 , 22 },
-	{  3 ,  9 , 15 , 21 },
-	{ -1 , -1 , -1 , -1 },
-	{ -1 , -1 , -1 , -1 },
-	{  2 ,  8 , 14 , 20 },
-	{  1 ,  7 , 13 , 19 },
-	{  0 ,  6 , 12 , 18 }
-};
 class Board
 {
 public:
@@ -63,8 +53,9 @@ public:
 		GLfloat center_x,center_y;
 		if ( player == 1 ) glColor3f(1.0f,1.0f,1.0f); // Player 1 Pawn Color
 		else glColor3f(0.0f,0.0f,0.0f); // Player 2 Pawn Color
-		center_x = -35.0f /* -40 + 5 */ + (GLfloat)(x*10);
-		center_y = -35.0f /* -40 + 5 */ + (GLfloat)((x%2 + y)*20);
+		center_y = -35.0f /* -40 + 5 */ + (GLfloat)(y*10);
+		if( y%2 == 0) center_x = -35.0f /* -40 + 5 */ + (GLfloat)(x*20);
+		else center_x = -25.0f /* -40 + 5 */ + (GLfloat)(x*20);
 		glBegin(GL_POLYGON);
 		for(float theta = 0.0; theta <  TWO_PI; theta += 0.2f)
 			glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
