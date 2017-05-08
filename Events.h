@@ -1,6 +1,8 @@
 #include"Objects.h"
 #include<math.h>
 #include<iostream>
+GLfloat rotate_angle = 0.0f;
+bool is_rotating = false;
 bool is_first_time = true;
 Board board_obj;
 Pawn pawns[24];
@@ -8,16 +10,18 @@ int board[8][4] = {{-1},{-1},{-1},{-1},{-1},{-1},{-1},{-1}};
 void init()
 {
 	int count = 0;
-	// Player 1
 	for(int i = 0; i<4 ; i++)
 	{
-		pawns[count++].create_pawn( i, 0, 1); board[0][i] = count - 1;
-		pawns[count++].create_pawn( i, 1, 1); board[1][i] = count - 1;
-		pawns[count++].create_pawn( i, 2, 1); board[2][i] = count - 1;
-		pawns[count++].create_pawn( i, 5, 2); board[5][i] = count - 1;
-		pawns[count++].create_pawn( i, 6, 2); board[6][i] = count - 1;
-		pawns[count++].create_pawn( i, 7, 2); board[7][i] = count - 1;
+		// Player 1 Pawns
+		pawns[count].create_pawn( i, 0, 1); board[0][i] = count++;
+		pawns[count].create_pawn( i, 1, 1); board[1][i] = count++;
+		pawns[count].create_pawn( i, 2, 1); board[2][i] = count++;
+		// Player 2 Pawns
+		pawns[count].create_pawn( i, 5, 2); board[5][i] = count++;
+		pawns[count].create_pawn( i, 6, 2); board[6][i] = count++;
+		pawns[count].create_pawn( i, 7, 2); board[7][i] = count++;
 	}
+	/* Testing [Remove this line] ------------------*/ //pawns[2].create_pawn( 0, 3, 1);
 }
 void display_event_handler()
 {
@@ -29,6 +33,10 @@ void display_event_handler()
 		pawns[i].draw();
 	glutSwapBuffers(); //Swapping Back and Front Buffers.
 }
+void rotate_function()
+{
+	is_rotating = true; 
+}
 void reshape_event_handler(int w,int h)
 {
 	GLint x = 0,y = 0;
@@ -39,7 +47,7 @@ void reshape_event_handler(int w,int h)
 		x = w / 2 - 350;
 		y = h / 2 - 350;
 	}
-	glViewport(x,0,700,700);
+	glViewport(x,y,700,700);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-40,40,-40,50);
