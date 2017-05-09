@@ -37,15 +37,15 @@ void display_event_handler()
 }
 void reshape_event_handler(int w,int h)
 {
-	GLint x = 0,y = 0;
+	window_width = w; window_height = h;
 	if( w < 700 || h < 700)
 		std::cerr<<"Don't Reduce the Window Size\n";
 	else
 	{
-		x = w / 2 - 350;
-		y = h / 2 - 350;
+		window_start_x = w / 2 - 350;
+		window_start_y = h / 2 - 350;
 	}
-	glViewport(x,y,700,700);
+	glViewport(window_start_x,window_start_y,700,700);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-40,40,-40,50);
@@ -58,4 +58,24 @@ void keyboard_event_handler(unsigned char ch,int x,int y)
 }
 void mouse_event_handler(int button,int action,int x,int y)
 {
+	if(button == GLUT_LEFT_BUTTON && action == GLUT_DOWN)
+	{
+		x-= window_start_x;
+		y = window_height -y; y-= window_start_y;
+		int i = (int)floor(y / (77.777777777777777));
+		int j = (int)floor(x / 87.5);
+		if( i%2 == 0)
+		{
+			if(j%2 == 1) { std::cout<<"Wrong Move\n"; return;}
+			j = j / 2;
+		}
+		else
+		{
+			if(j%2 == 0) { std::cout<<"Wrong Move\n"; return;}
+			j = (j-1)/2;
+		}
+		if(board[i][j] == -1) std::cout<<"Wrong Move\n";
+		else pawns[board[i][j]].set_is_selected(true);
+	}
+	else return;
 }
