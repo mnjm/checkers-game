@@ -34,8 +34,13 @@ class Pawn
 {
 private:
 	int x,y,player;
+	bool is_selected;
+	bool active;
 public:
-	Pawn() {}
+	Pawn() {
+		is_selected = false;
+		active = true;
+	}
 	void create_pawn(int _x,int _y,int _player)
 	{
 		x = _x; y = _y; player = _player;
@@ -48,8 +53,17 @@ public:
 	{
 		*_x = x; *_y = y; return;
 	}
+	void set_is_selected(bool val)
+	{
+		is_selected = val;
+	}
+	bool set_is_selected()
+	{
+		return is_selected;
+	}
 	void draw()
 	{
+		if(!active) return;
 		GLfloat center_x,center_y;
 		if ( player == 1 ) glColor3f(1.0f,1.0f,1.0f); // Player 1 Pawn Color
 		else glColor3f(0.0f,0.0f,0.0f); // Player 2 Pawn Color
@@ -60,5 +74,15 @@ public:
 		for(float theta = 0.0; theta <  TWO_PI; theta += 0.2f)
 			glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
 		glEnd();
+		if(is_selected)
+		{
+			if(player == 1) glColor3f(0.0f,0.0f,0.0f);
+			else glColor3f(1.0f,1.0f,1.0f);
+			glPointSize(2);
+			glBegin(GL_POINTS);
+			for(float theta = 0.0; theta <  TWO_PI; theta += 0.02f)
+				glVertex2f(center_x + 4.9f * cos(theta), center_y + 4.9f * sin(theta));
+			glEnd();
+		}
 	}
 };

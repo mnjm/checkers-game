@@ -1,9 +1,9 @@
 #include"Objects.h"
 #include<math.h>
 #include<iostream>
-GLfloat rotate_angle = 0.0f;
 bool is_rotating = false;
 bool is_first_time = true;
+GLint window_width,window_height,window_start_x,window_start_y;
 Board board_obj;
 Pawn pawns[24];
 int board[8][4] = {{-1},{-1},{-1},{-1},{-1},{-1},{-1},{-1}};
@@ -22,20 +22,18 @@ void init()
 		pawns[count].create_pawn( i, 7, 2); board[7][i] = count++;
 	}
 	/* Testing [Remove this line] ------------------*/ //pawns[2].create_pawn( 0, 3, 1);
+	//pawns[3].set_is_selected(true);
 }
 void display_event_handler()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	if(!is_rotating) {}
 	board_obj.draw();
 	if(is_first_time) { init(); is_first_time = false; }
 	for(int i = 0; i<24; i++)
 		pawns[i].draw();
 	glutSwapBuffers(); //Swapping Back and Front Buffers.
-}
-void rotate_function()
-{
-	is_rotating = true; 
 }
 void reshape_event_handler(int w,int h)
 {

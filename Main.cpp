@@ -10,6 +10,7 @@ int main(int argc,char **argv)
 	glutDisplayFunc(display_event_handler);
 	glutMouseFunc(mouse_event_handler);
 	glutKeyboardFunc(keyboard_event_handler);
+	/*Testing*/ //glutTimerFunc(30,rotate_the_board,0);
 	glutMainLoop();
 	return 0;
 }
