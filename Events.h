@@ -5,6 +5,7 @@ bool is_rotating = false;
 bool is_first_time = true;
 GLint window_width,window_height,window_start_x,window_start_y;
 Board board_obj;
+Score_Board score_board_obj;
 Pawn pawns[24];
 int pawn_selected[2] = {-1,-1};
 bool is_player2_s_turn = false;
