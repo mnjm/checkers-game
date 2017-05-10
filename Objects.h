@@ -32,14 +32,15 @@ public:
 };
 class Pawn
 {
-private:
+public:
 	int x,y,player;
 	bool is_selected;
 	bool active;
-public:
+	bool king_pawn;
 	Pawn() {
 		is_selected = false;
 		active = true;
+		king_pawn = false;
 	}
 	void create_pawn(int _x,int _y,int _player)
 	{
@@ -48,18 +49,6 @@ public:
 	int which_player()
 	{
 		return player;
-	}
-	void get_the_index(int *_x,int *_y)
-	{
-		*_x = x; *_y = y; return;
-	}
-	void set_is_selected(bool val)
-	{
-		is_selected = val;
-	}
-	bool set_is_selected()
-	{
-		return is_selected;
 	}
 	void draw()
 	{
@@ -78,11 +67,25 @@ public:
 		{
 			if(player == 1) glColor3f(0.0f,0.0f,0.0f);
 			else glColor3f(1.0f,1.0f,1.0f);
-			glPointSize(2);
-			glBegin(GL_POINTS);
-			for(float theta = 0.0; theta <  TWO_PI; theta += 0.02f)
+			glLineWidth(2);
+			glBegin(GL_LINE_LOOP);
+			for(float theta = 0.0; theta <  TWO_PI; theta += 0.5f )
 				glVertex2f(center_x + 4.9f * cos(theta), center_y + 4.9f * sin(theta));
 			glEnd();
 		}
+		if(king_pawn)
+		{
+			if(player == 1) glColor3f(0.0f,0.0f,0.0f);
+			else glColor3f(1.0f,1.0f,1.0f);
+			glBegin(GL_LINE_STRIP);
+			for(float theta = 0.0,count = 0; count < 6; theta += 2.51428f,count++)
+				glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
+			glEnd();
+		}
 	}
+};
+class Score_Board
+{
+public:
+	
 };

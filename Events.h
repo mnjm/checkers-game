@@ -6,6 +6,8 @@ bool is_first_time = true;
 GLint window_width,window_height,window_start_x,window_start_y;
 Board board_obj;
 Pawn pawns[24];
+int pawn_selected[2] = {-1,-1};
+bool is_player2_s_turn = false;
 int board[8][4] = {{-1},{-1},{-1},{-1},{-1},{-1},{-1},{-1}};
 void init()
 {
@@ -21,8 +23,7 @@ void init()
 		pawns[count].create_pawn( i, 6, 2); board[6][i] = count++;
 		pawns[count].create_pawn( i, 7, 2); board[7][i] = count++;
 	}
-	/* Testing [Remove this line] ------------------*/ //pawns[2].create_pawn( 0, 3, 1);
-	//pawns[3].set_is_selected(true);
+	//pawns[3].king_pawn = true;
 }
 void display_event_handler()
 {
@@ -74,8 +75,6 @@ void mouse_event_handler(int button,int action,int x,int y)
 			if(j%2 == 0) { std::cout<<"Wrong Move\n"; return;}
 			j = (j-1)/2;
 		}
-		if(board[i][j] == -1) std::cout<<"Wrong Move\n";
-		else pawns[board[i][j]].set_is_selected(true);
 	}
 	else return;
 }
