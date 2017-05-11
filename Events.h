@@ -35,6 +35,7 @@ void display_event_handler()
 	if(is_first_time) { init(); is_first_time = false; }
 	for(int i = 0; i<24; i++)
 		pawns[i].draw();
+	score_board_obj.draw();
 	glutSwapBuffers(); //Swapping Back and Front Buffers.
 }
 void reshape_event_handler(int w,int h)

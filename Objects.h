@@ -1,4 +1,5 @@
 #include<GL/glut.h>
+#include<stdio.h>
 #include<math.h>
 #define TWO_PI 6.28571428f
 class Board
@@ -82,5 +83,60 @@ public:
 				glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
 			glEnd();
 		}
+	}
+};
+class Score_Board
+{
+private: unsigned int p1_score,p2_score;
+		 char msg[100];
+		 void type(const char *str,double x,double y,double sx,double sy)
+		 {
+			 glPushMatrix();
+			 glTranslated(x,y,0.0);
+			 glScaled(sx,sy,0.0);
+			 glLineWidth(3.0f);
+			 while(*str != NULL)
+			 {
+				 glutStrokeCharacter(GLUT_STROKE_ROMAN, (int) *str);
+				 str++;
+			 }
+			 glPopMatrix();
+		 }
+public:
+	Score_Board()
+	{
+		p1_score  = 0;
+		p2_score  = 0;
+		msg[0] = NULL;
+
+		//msg[0] = 'W'; msg[1] = 'o'; msg[2] = 'r'; msg[3] = 'k'; msg[4] = 'i'; msg[5] = 'n'; msg[6] = 'g'; msg[7] = NULL;
+	}
+	void draw()
+	{
+		// Player 1
+		glColor3f(0.2f,0.2f,0.2f);
+		glBegin(GL_QUADS);
+		glVertex2f(-40.0f,+40.0f); glVertex2f(-20.0f,+40.0f);
+		glVertex2f(-20.0f,+50.0f); glVertex2f(-40.0f,+50.0f);
+		glEnd();
+		glColor3d(1.0,1.0,1.0);
+		type("Player 1",-39.0,+47.0,0.025,0.025);
+		char buff[30];
+		sprintf_s(buff,"Score: %2d",p1_score);
+		type(buff,-39.0,+43.0,0.022,0.022);
+
+		// Player 2
+		glColor3f(0.2f,0.2f,0.2f);
+		glBegin(GL_QUADS);
+		glVertex2f(+20.0f,+40.0f); glVertex2f(+40.0f,+40.0f);
+		glVertex2f(+40.0f,+50.0f); glVertex2f(+20.0f,+50.0f);
+		glEnd();
+		glColor3d(1.0,1.0,1.0);
+		type("Player 2",21.0,+47.0,0.025,0.025);
+		sprintf_s(buff,"Score: %2d",p2_score);
+		type(buff,21.0,+43.0,0.022,0.022);
+
+		//Message
+		type(msg,-20.0,+42.0,0.03,0.03);
 	}
 };
