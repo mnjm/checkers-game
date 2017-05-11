@@ -7,9 +7,9 @@ GLint window_width,window_height,window_start_x,window_start_y;
 Board board_obj;
 Score_Board score_board_obj;
 Pawn pawns[24];
-int pawn_selected[2] = {-1,-1};
-bool is_player2_s_turn = false;
-int board[8][4] = {{-1},{-1},{-1},{-1},{-1},{-1},{-1},{-1}};
+int pawn_selected = -1;
+bool is_player2_turn = false;
+int board[8][4] = {{-1,-1,-1,-1},{-1,-1,-1,-1},{-1,-1,-1,-1},{-1,-1,-1,-1},{-1,-1,-1,-1},{-1,-1,-1,-1},{-1,-1,-1,-1},{-1,-1,-1,-1}};
 void init()
 {
 	int count = 0;
@@ -69,14 +69,27 @@ void mouse_event_handler(int button,int action,int x,int y)
 		int j = (int)floor(x / 87.5);
 		if( i%2 == 0)
 		{
-			if(j%2 == 1) { std::cout<<"Wrong Move\n"; return;}
+			if(j%2 == 1) { score_board_obj.message("Wrong Move!"); return;}
 			j = j / 2;
 		}
 		else
 		{
-			if(j%2 == 0) { std::cout<<"Wrong Move\n"; return;}
+			if(j%2 == 0) { score_board_obj.message("Wrong Move!"); return;}
 			j = (j-1)/2;
 		}
+		if( board[i][j] == -1 )
+		{
+			if ( pawn_selected == -1 ) { score_board_obj.message("Wrong Move!"); return;}
+			// Continue
+		}
+		else
+		{
+			if ( (pawns[board[i][j]].which_player() == 1 && is_player2_turn) || (pawns[board[i][j]].which_player() == 2 && !is_player2_turn) )
+				{ score_board_obj.message("Wrong Move!"); return;}
+			if ( pawn_selected != -1 ) pawns[pawn_selected].is_selected = false;
+			pawn_selected = board[i][j];
+			pawns[board[i][j]].is_selected = true; score_board_obj.message("");
+			// Continue
+		}
 	}
-	else return;
 }

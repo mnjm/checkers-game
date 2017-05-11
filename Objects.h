@@ -107,9 +107,18 @@ public:
 	{
 		p1_score  = 0;
 		p2_score  = 0;
-		msg[0] = NULL;
+		sprintf_s(msg,"Player 1's Turn");
 
 		//msg[0] = 'W'; msg[1] = 'o'; msg[2] = 'r'; msg[3] = 'k'; msg[4] = 'i'; msg[5] = 'n'; msg[6] = 'g'; msg[7] = NULL;
+	}
+	void increment_scorer(int player)
+	{
+		if(player == 1) p1_score++;
+		else if(player == 2) p2_score++;
+	}
+	void message(const char *_msg)
+	{
+		sprintf_s(msg,"%s",_msg);
 	}
 	void draw()
 	{
@@ -137,6 +146,6 @@ public:
 		type(buff,21.0,+43.0,0.022,0.022);
 
 		//Message
-		type(msg,-20.0,+42.0,0.03,0.03);
+		type(msg,-14.0,+44.0,0.03,0.03);
 	}
 };
