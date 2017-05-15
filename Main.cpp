@@ -5,7 +5,7 @@ int main(int argc,char **argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(700,700);
 	glutInitWindowPosition(15, 15);
-	glutCreateWindow("Checker's Game");
+	glutCreateWindow("Checkers Game");
 	glutReshapeFunc(reshape_event_handler);
 	glutDisplayFunc(display_event_handler);
 	glutMouseFunc(mouse_event_handler);

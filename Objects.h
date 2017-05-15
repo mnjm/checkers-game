@@ -1,7 +1,8 @@
 #include<GL/glut.h>
 #include<stdio.h>
 #include<math.h>
-#define TWO_PI 6.28571428f
+GLfloat cos_vals[] = {1.0f,0.980067f,0.921061f,0.825336f,0.696707f,0.540302f,0.362358f,0.169967f,-0.0291997f,-0.227202f,-0.416147f,-0.588501f,-0.737394f,-0.856889f,-0.942222f,-0.989993f,-0.998295f,-0.966798f,-0.896758f,-0.790967f,-0.653643f,-0.490261f,-0.307333f,-0.112153f,0.0874987f,0.283662f,0.468516f,0.634692f,0.775565f,0.885519f,0.96017f,0.996542f};
+GLfloat sin_vals[] = {0.0f,0.198669f,0.389418f,0.564642f,0.717356f,0.841471f,0.932039f,0.98545f,0.999574f,0.973848f,0.909297f,0.808496f,0.675463f,0.515501f,0.334988f,0.14112f,-0.0583747f,-0.255542f,-0.442521f,-0.611858f,-0.756803f,-0.871576f,-0.951602f,-0.993691f,-0.996165f,-0.958924f,-0.883455f,-0.772765f,-0.631267f,-0.464603f,-0.279417f,-0.083091f};
 class Board
 {
 public:
@@ -17,8 +18,8 @@ public:
 			for(int j = 0; j < 8; j++)
 			{
 				glBegin(GL_QUADS);
-				if(color == 0) { glColor3f(1.0f,0.0f,0.0f);/* Red Color */ color = 1; }
-				else { glColor3f(0.0f,1.0f,0.0f);  /* Green Color */ color = 0; }
+				if(color == 0) { glColor3f(1.0f,1.0f,1.0f); color = 1; }
+				else { glColor3f(0.403921f,0.403921f,0.403921f); color = 0; }
 				x = -40.0f + ( i * 10);
 				y = -40.0f + ( j * 10);
 				glVertex2f(x, y);
@@ -33,6 +34,12 @@ public:
 };
 class Pawn
 {
+private: 
+	void draw_circle(GLfloat x,GLfloat y,GLfloat radius)
+	{
+		for(int i = 0; i < 32; i++ )
+			glVertex2f(x + radius * cos_vals[i], y + radius * sin_vals[i]);
+	}
 public:
 	int x,y,player;
 	bool is_selected;
@@ -55,29 +62,29 @@ public:
 	{
 		if(!active) return;
 		GLfloat center_x,center_y;
-		if ( player == 1 ) glColor3f(1.0f,1.0f,1.0f); // Player 1 Pawn Color
-		else glColor3f(0.0f,0.0f,0.0f); // Player 2 Pawn Color
-		center_y = -35.0f /* -40 + 5 */ + (GLfloat)(y*10);
-		if( y%2 == 0) center_x = -35.0f /* -40 + 5 */ + (GLfloat)(x*20);
-		else center_x = -25.0f /* -40 + 5 */ + (GLfloat)(x*20);
+		if ( player == 1 ) glColor3f(1.0f,0.5725f,0.14117f); // Player 1 Pawn Color
+		else glColor3f(0.0f,0.88235f,0.88235f); // Player 2 Pawn Color
+		center_x = -35.0f + x*10;
+		center_y = -35.0f + y*10;
 		glBegin(GL_POLYGON);
-		for(float theta = 0.0; theta <  TWO_PI; theta += 0.2f)
-			glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
+		draw_circle(center_x,center_y,4.5f);
+		glEnd();
+		if ( player == 1) glColor3f(0.35686f,0.1804f,0.0f);
+		else glColor3f(0.0f,0.25098f,0.25098f);
+		glBegin(GL_LINE_LOOP);
+		draw_circle(center_x,center_y,4.6f);
 		glEnd();
 		if(is_selected)
 		{
-			if(player == 1) glColor3f(0.0f,0.0f,0.0f);
-			else glColor3f(1.0f,1.0f,1.0f);
+			glColor3f(0.0f,0.0f,0.0f);
 			glLineWidth(2);
 			glBegin(GL_LINE_LOOP);
-			for(float theta = 0.0; theta <  TWO_PI; theta += 0.5f )
-				glVertex2f(center_x + 4.9f * cos(theta), center_y + 4.9f * sin(theta));
+			draw_circle(center_x,center_y,4.9f);
 			glEnd();
 		}
 		if(king_pawn)
 		{
-			if(player == 1) glColor3f(0.0f,0.0f,0.0f);
-			else glColor3f(1.0f,1.0f,1.0f);
+			glColor3f(0.0f,0.0f,0.0f);
 			glBegin(GL_LINE_STRIP);
 			for(float theta = 0.0,count = 0; count < 6; theta += 2.51428f,count++)
 				glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
@@ -87,31 +94,31 @@ public:
 };
 class Score_Board
 {
-private: unsigned int p1_score,p2_score;
-		 char msg[100];
-		 void type(const char *str,double x,double y,double sx,double sy)
-		 {
-			 glPushMatrix();
-			 glTranslated(x,y,0.0);
-			 glScaled(sx,sy,0.0);
-			 glLineWidth(3.0f);
-			 while(*str != NULL)
-			 {
-				 glutStrokeCharacter(GLUT_STROKE_ROMAN, (int) *str);
-				 str++;
-			 }
-			 glPopMatrix();
-		 }
+private: 
+	unsigned int temp; // Check this.
+	unsigned int p1_score;
+	unsigned int p2_score;
+	char msg[100];
+	void type(const char *str,double x,double y,double sx,double sy)
+	{
+		glPushMatrix();
+		glTranslated(x,y,0.0);
+		glScaled(sx,sy,0.0);
+		glLineWidth(3.0f);
+		while(*str != NULL)
+		{
+			glutStrokeCharacter(GLUT_STROKE_ROMAN, (int) *str);
+			str++;
+		}
+		glPopMatrix();
+	}
 public:
 	Score_Board()
 	{
-		p1_score  = 0;
-		p2_score  = 0;
+		p1_score = p2_score = 0;
 		sprintf_s(msg,"Player 1's Turn");
-
-		//msg[0] = 'W'; msg[1] = 'o'; msg[2] = 'r'; msg[3] = 'k'; msg[4] = 'i'; msg[5] = 'n'; msg[6] = 'g'; msg[7] = NULL;
 	}
-	void increment_scorer(int player)
+	void increment_score(int player)
 	{
 		if(player == 1) p1_score++;
 		else if(player == 2) p2_score++;
@@ -131,7 +138,7 @@ public:
 		glColor3d(1.0,1.0,1.0);
 		type("Player 1",-39.0,+47.0,0.025,0.025);
 		char buff[30];
-		sprintf_s(buff,"Score: %2d",p1_score);
+		sprintf_s(buff,"Score: %d",p1_score);
 		type(buff,-39.0,+43.0,0.022,0.022);
 
 		// Player 2
@@ -142,7 +149,7 @@ public:
 		glEnd();
 		glColor3d(1.0,1.0,1.0);
 		type("Player 2",21.0,+47.0,0.025,0.025);
-		sprintf_s(buff,"Score: %2d",p2_score);
+		sprintf_s(buff,"Score: %d",p2_score);
 		type(buff,21.0,+43.0,0.022,0.022);
 
 		//Message
