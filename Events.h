@@ -72,6 +72,13 @@ void keyboard_event_handler(unsigned char ch,int x,int y)
 	if ( ch == 'q' || ch == 'Q' ) exit(0);
 	else if ( ch == 'r' || ch == 'R' ) init();
 }
+void check_king_pawn(int selected_pawn)
+{
+	if(pawns[selected_pawn].player == 1 && pawns[selected_pawn].y == 7) // Player 1
+		pawns[selected_pawn].king_pawn = true;
+	else if(pawns[selected_pawn].player == 2 && pawns[selected_pawn].y == 0) // Player 2
+		pawns[selected_pawn].king_pawn = true;
+}
 void mouse_event_handler(int button,int action,int x,int y)
 {
 	if(button == GLUT_LEFT_BUTTON && action == GLUT_DOWN)
@@ -86,12 +93,12 @@ void mouse_event_handler(int button,int action,int x,int y)
 		if( i%2 != j%2) { score_board_obj.message("Wrong Move!"); return; } // Checking if the Shaded Cube is selected.
 		if(is_player2_turn == false)
 		{ // Player 1
-			if( pawns[board[i][j]].player == 2) // If Player's Pawn is selected.
+			if( pawns[board[i][j]].player == 2) // If Player 2's Pawn is selected.
 			{
 				score_board_obj.message("Wrong Move!");
 				return;
 			}
-			if(pawn_selected == -1) // If No pawn is selected.
+			if(pawn_selected == -1) // If No pawn is selected before.
 			{
 				if( board[i][j] == -1) // If Empty Space is selected.
 				{
@@ -100,47 +107,87 @@ void mouse_event_handler(int button,int action,int x,int y)
 				}
 				pawn_selected = board[i][j];
 				pawns[board[i][j]].is_selected = true;
+				return;
 			}
 			if( pawns[board[i][j]].player == 1) // If player 1's pawn is selected.
 			{
 				pawns[pawn_selected].is_selected = false;
 				pawn_selected = board[i][j];
 				pawns[pawn_selected].is_selected = true;
+				return;
 			}
-			if( ((pawns[pawn_selected].x == j-1) || (pawns[pawn_selected].x == j+1)) && pawns[pawn_selected].y == i-1) // If a place diagonally adjust is selected.
+			if( ((pawns[pawn_selected].x == j-1) || (pawns[pawn_selected].x == j+1)) && pawns[pawn_selected].y == i-1) // If the place diagonally adjacent is selected.
 			{
 				pawns[pawn_selected].is_selected = false; // Un"Select" the pawn.
 				board[pawns[pawn_selected].y][pawns[pawn_selected].x] = -1; //Change the source board values to -1.
 				board[i][j] = pawn_selected; // Add the destination board value.
 				pawns[pawn_selected].x = j; // Change the co-ordinate of the pawn.
 				pawns[pawn_selected].y = i;
+				check_king_pawn(pawn_selected); // Checking weather pawn is eligible for king pawn.
 				pawn_selected = -1; // Un"Select" the pawn index.
-				score_board_obj.message(""); //Clear any message.
+				score_board_obj.message("Player 2's Turn"); //Clear any message and display that it is player 2's turn.
 				is_player2_turn = true; //Player 2's Turn.
+				return;
+			}
+			if( pawns[pawn_selected].y == i-2 ) // If the move is jump
+			{
+				if(pawns[pawn_selected].x == j-2 && pawns[board[i-1][j-1]].player == 2) //Checking for Jumping criteria towards right
+				{
+					pawns[board[i-1][j-1]].active = false; // Donot display the Player 2's pawn which is diagonnaly adjacent to selected pawn.
+					board[i-1][j-1] = -1; // Removing that pawn from board matrix.
+					score_board_obj.increment_score(1); // Incrementing the score of Player 1.
+					pawns[pawn_selected].x = j; pawns[pawn_selected].y = i; // Replace the selected pawn to the 2*diagonaly adjacent to the pawn on right side.
+					board[i][j] = pawn_selected; // Making changes to Board matrix
+					pawns[pawn_selected].is_selected = false; // Un"selecting" the pawn
+					check_king_pawn(pawn_selected); // Checking weather pawn is eligible for king pawn.
+					pawn_selected = -1; // Reseting the pawn index.
+					score_board_obj.message("Player 2's Turn");
+					is_player2_turn = true; // Player 2's turn. ---------------------------------Perform Double or more jumps------------------
+				}
+				else if(pawns[pawn_selected].x == j+2 && pawns[board[i-1][j+1]].player == 2) //Checking for Jumping criteria towards left
+				{
+					pawns[board[i-1][j+1]].active = false; // Donot display the Player 2's pawn which is diagonnaly adjacent to selected pawn.
+					board[i-1][j+1] = -1; // Removing that pawn from board matrix.
+					score_board_obj.increment_score(1); // Incrementing the score of Player 1.
+					pawns[pawn_selected].x = j; pawns[pawn_selected].y = i;  // Replace the selected pawn to the 2*diagonaly adjacent to the pawn on left side.
+					board[i][j] = pawn_selected; // Making changes to Board matrix
+					pawns[pawn_selected].is_selected = false; // Un"selecting" the pawn
+					check_king_pawn(pawn_selected); // Checking weather pawn is eligible for king pawn.
+					pawn_selected = -1; // Reseting the pawn index.
+					score_board_obj.message("Player 2's Turn");
+					is_player2_turn = true; // Player 2's turn. ---------------------------------Perform Double or more jumps------------------
+				}
+				else
+				{
+					score_board_obj.message("Wrong Move!");
+					return;
+				}
 			}
 		}
 		else
 		{ // Player 2
-			if( pawns[board[i][j]].player == 1)
+			if( pawns[board[i][j]].player == 1) // If Player 1's Pawn is selected.
 			{
 				score_board_obj.message("Wrong Move!");
 				return;
 			}
-			if(pawn_selected == -1)
+			if(pawn_selected == -1) // If No pawn is selected before.
 			{
-				if( board[i][j] == -1 )
+				if( board[i][j] == -1 ) // If Empty Space is selected.
 				{
 					score_board_obj.message("Wrong Move!");
 					return;
 				}
 				pawn_selected = board[i][j];
 				pawns[board[i][j]].is_selected = true;
+				return;
 			}
-			if( pawns[board[i][j]].player == 2)
+			if( pawns[board[i][j]].player == 2) // If player 2's pawn is selected.
 			{
 				pawns[pawn_selected].is_selected = false;
 				pawn_selected = board[i][j];
 				pawns[pawn_selected].is_selected = true;
+				return;
 			}
 			if( ((pawns[pawn_selected].x == j-1) || (pawns[pawn_selected].x == j+1)) && pawns[pawn_selected].y == i+1) // If a place diagonally adjust is selected.
 			{
@@ -149,9 +196,45 @@ void mouse_event_handler(int button,int action,int x,int y)
 				board[i][j] = pawn_selected; // Add the destination board value.
 				pawns[pawn_selected].x = j; // Change the co-ordinate of the pawn.
 				pawns[pawn_selected].y = i;
+				check_king_pawn(pawn_selected); // Checking weather pawn is eligible for king pawn.
 				pawn_selected = -1; // Un"Select" the pawn index.
 				score_board_obj.message("Player 1's Turn"); //Clear any message and display that the chance is for player 1.
-				is_player2_turn = true; //Player 1's Turn.
+				is_player2_turn = false; //Player 1's Turn.
+				return;
+			}
+			if( pawns[pawn_selected].y == i+2 ) // If the move is jump
+			{
+				if(pawns[pawn_selected].x == j-2 && pawns[board[i+1][j-1]].player == 1) //Checking for Jumping criteria towards right
+				{
+					pawns[board[i+1][j-1]].active = false; // Donot display the Player 1's pawn which is diagonnaly adjacent to selected pawn.
+					board[i+1][j-1] = -1; // Removing that pawn from board matrix.
+					score_board_obj.increment_score(2); // Incrementing the score of Player 2.
+					pawns[pawn_selected].x = j; pawns[pawn_selected].y = i; // Replace the selected pawn to the 2*diagonaly adjacent to the pawn on right side.
+					board[i][j] = pawn_selected; // Making changes to Board matrix
+					pawns[pawn_selected].is_selected = false; // Un"selecting" the pawn
+					check_king_pawn(pawn_selected); // Checking weather pawn is eligible for king pawn.
+					pawn_selected = -1; // Reseting the pawn index.
+					score_board_obj.message("Player 1's Turn");
+					is_player2_turn = false; // Player 1's turn. ---------------------------------Perform Double or more jumps------------------
+				}
+				else if(pawns[pawn_selected].x == j+2 && pawns[board[i+1][j+1]].player == 1) //Checking for Jumping criteria towards left
+				{
+					pawns[board[i+1][j+1]].active = false; // Donot display the Player 1's pawn which is diagonnaly adjacent to selected pawn.
+					board[i+1][j+1] = -1; // Removing that pawn from board matrix.
+					score_board_obj.increment_score(2); // Incrementing the score of Player 2.
+					pawns[pawn_selected].x = j; pawns[pawn_selected].y = i;  // Replace the selected pawn to the 2*diagonaly adjacent to the pawn on left side.
+					board[i][j] = pawn_selected; // Making changes to Board matrix
+					pawns[pawn_selected].is_selected = false; // Un"selecting" the pawn
+					check_king_pawn(pawn_selected); // Checking weather pawn is eligible for king pawn.
+					pawn_selected = -1; // Reseting the pawn index.
+					score_board_obj.message("Player 1's Turn");
+					is_player2_turn = false; // Player 1's turn. ---------------------------------Perform Double or more jumps------------------
+				}
+				else
+				{
+					score_board_obj.message("Wrong Move!");
+					return;
+				}
 			}
 		}
 	}
