@@ -7,7 +7,7 @@ Board board_obj;
 Score_Board score_board_obj;
 Pawn pawns[24];
 int pawn_selected = -1;
-bool is_player2_turn = false;
+extern bool is_player2_turn;
 int board[8][8];
 void init()
 {
@@ -67,7 +67,10 @@ void display_event_handler()
 void reshape_event_handler(int w,int h)
 {
 	if(!is_fullscreen)
-		window_width = w; window_height = h;
+	{
+		window_width = w;
+		window_height = h;
+	}
 	if( w < 700 || h < 700)
 		score_board_obj.message("Don't Reduce the Window Size");
 	else
@@ -189,6 +192,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 2's Turn");
 					is_player2_turn = true; // Player 2's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else if(pawns[pawn_selected].x == j+2 && pawns[board[i-1][j+1]].player == 2) //Checking for Jumping criteria towards left
 				{
@@ -203,6 +207,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 2's Turn");
 					is_player2_turn = true; // Player 2's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else
 				{
@@ -225,6 +230,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 2's Turn");
 					is_player2_turn = true; // Player 2's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else if(pawns[pawn_selected].x == j+2 && pawns[board[i+1][j+1]].player == 2) //Checking for Jumping criteria towards left
 				{
@@ -239,6 +245,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 2's Turn");
 					is_player2_turn = true; // Player 2's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else
 				{
@@ -318,6 +325,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 1's Turn");
 					is_player2_turn = false; // Player 1's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else if(pawns[pawn_selected].x == j+2 && pawns[board[i+1][j+1]].player == 1) //Checking for Jumping criteria towards left
 				{
@@ -333,6 +341,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 1's Turn");
 					is_player2_turn = false; // Player 1's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else
 				{
@@ -355,6 +364,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 1's Turn");
 					is_player2_turn = false; // Player 1's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else if(pawns[pawn_selected].x == j+2 && pawns[board[i-1][j+1]].player == 1) //Checking for Jumping criteria towards left
 				{
@@ -369,6 +379,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 					pawn_selected = -1; // Reseting the pawn index.
 					score_board_obj.message("Player 1's Turn");
 					is_player2_turn = false; // Player 1's turn. ---------------------------------Perform Double or more jumps------------------
+					return;
 				}
 				else
 				{
@@ -393,7 +404,7 @@ void popupmenu_handler(int id)
 			return;
 		is_fullscreen = false;
 		glutReshapeWindow(window_width,window_height);
-		glutPositionWindow(0,0);
+		glutPositionWindow(250,15);
 	}
 	else if(id == 3) // Restart the Game.
 	{

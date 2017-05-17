@@ -3,7 +3,7 @@
 #include<math.h>
 GLfloat cos_vals[] = {1.0f,0.980067f,0.921061f,0.825336f,0.696707f,0.540302f,0.362358f,0.169967f,-0.0291997f,-0.227202f,-0.416147f,-0.588501f,-0.737394f,-0.856889f,-0.942222f,-0.989993f,-0.998295f,-0.966798f,-0.896758f,-0.790967f,-0.653643f,-0.490261f,-0.307333f,-0.112153f,0.0874987f,0.283662f,0.468516f,0.634692f,0.775565f,0.885519f,0.96017f,0.996542f};
 GLfloat sin_vals[] = {0.0f,0.198669f,0.389418f,0.564642f,0.717356f,0.841471f,0.932039f,0.98545f,0.999574f,0.973848f,0.909297f,0.808496f,0.675463f,0.515501f,0.334988f,0.14112f,-0.0583747f,-0.255542f,-0.442521f,-0.611858f,-0.756803f,-0.871576f,-0.951602f,-0.993691f,-0.996165f,-0.958924f,-0.883455f,-0.772765f,-0.631267f,-0.464603f,-0.279417f,-0.083091f};
-
+bool is_player2_turn = false;
 class Board
 {
 public:
@@ -111,6 +111,7 @@ private:
 	unsigned int temp; // Check this.
 	unsigned int p1_score;
 	unsigned int p2_score;
+	int which_player_turn;
 	char msg[100];
 	void type(const char *str,double x,double y,double sx,double sy)
 	{
@@ -128,6 +129,7 @@ private:
 public:
 	Score_Board()
 	{
+		which_player_turn = 1;
 		p1_score = p2_score = 0;
 		sprintf_s(msg,"Player 1's Turn");
 	}
@@ -161,7 +163,8 @@ public:
 		glVertex2f(-20.0f,+50.0f); glVertex2f(-40.0f,+50.0f);
 		glEnd();
 		glColor3d(1.0,1.0,1.0);
-		type("Player 1",-39.0,+47.0,0.025,0.025);
+		if(is_player2_turn) type("Player 1",-39.0,+47.0,0.025,0.025);
+		else type("Player 1 *",-39.0,+47.0,0.025,0.025);
 		char buff[30];
 		sprintf_s(buff,"Score: %d",p1_score);
 		type(buff,-39.0,+43.0,0.022,0.022);
@@ -173,7 +176,8 @@ public:
 		glVertex2f(+40.0f,+50.0f); glVertex2f(+20.0f,+50.0f);
 		glEnd();
 		glColor3d(1.0,1.0,1.0);
-		type("Player 2",21.0,+47.0,0.025,0.025);
+		if(is_player2_turn) type("Player 2 *",21.0,+47.0,0.025,0.025);
+		else type("Player 2",21.0,+47.0,0.025,0.025);
 		sprintf_s(buff,"Score: %d",p2_score);
 		type(buff,21.0,+43.0,0.022,0.022);
 
