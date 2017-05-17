@@ -3,6 +3,7 @@
 #include<math.h>
 GLfloat cos_vals[] = {1.0f,0.980067f,0.921061f,0.825336f,0.696707f,0.540302f,0.362358f,0.169967f,-0.0291997f,-0.227202f,-0.416147f,-0.588501f,-0.737394f,-0.856889f,-0.942222f,-0.989993f,-0.998295f,-0.966798f,-0.896758f,-0.790967f,-0.653643f,-0.490261f,-0.307333f,-0.112153f,0.0874987f,0.283662f,0.468516f,0.634692f,0.775565f,0.885519f,0.96017f,0.996542f};
 GLfloat sin_vals[] = {0.0f,0.198669f,0.389418f,0.564642f,0.717356f,0.841471f,0.932039f,0.98545f,0.999574f,0.973848f,0.909297f,0.808496f,0.675463f,0.515501f,0.334988f,0.14112f,-0.0583747f,-0.255542f,-0.442521f,-0.611858f,-0.756803f,-0.871576f,-0.951602f,-0.993691f,-0.996165f,-0.958924f,-0.883455f,-0.772765f,-0.631267f,-0.464603f,-0.279417f,-0.083091f};
+
 class Board
 {
 public:
@@ -53,6 +54,9 @@ public:
 	void create_pawn(int _x,int _y,int _player)
 	{
 		x = _x; y = _y; player = _player;
+		active = true;
+		is_selected = false;
+		king_pawn = false;
 	}
 	int which_player()
 	{
@@ -84,10 +88,19 @@ public:
 		}
 		if(king_pawn)
 		{
-			glColor3f(0.0f,0.0f,0.0f);
-			glBegin(GL_LINE_STRIP);
-			for(float theta = 0.0,count = 0; count < 6; theta += 2.51428f,count++)
-				glVertex2f(center_x + 4.5f * cos(theta), center_y + 4.5f * sin(theta));
+			glColor3f(1.0f,1.0f,0.0f);
+			glBegin(GL_TRIANGLES);
+			glVertex2f(center_x + 3.5f * cos(0.7854f), center_y + 3.5f * sin(0.7854f));
+			glVertex2f(center_x + 3.0f * cos(3.9270f), center_y + 3.0f * sin(3.9270f));
+			glVertex2f(center_x + 3.0f * cos(5.4972f), center_y + 3.0f * sin(5.4978f));
+
+			glVertex2f(center_x + 3.5f * cos(2.3562f), center_y + 3.5f * sin(2.3562f));
+			glVertex2f(center_x + 3.0f * cos(3.9270f), center_y + 3.0f * sin(3.9270f));
+			glVertex2f(center_x + 3.0f * cos(5.4972f), center_y + 3.0f * sin(5.4978f));
+
+			glVertex2f(center_x + 2.0f * cos(1.1781f), center_y + 2.0f * sin(1.1781f));
+			glVertex2f(center_x + 3.5f * cos(1.5708f), center_y + 3.5f * sin(1.5708f));
+			glVertex2f(center_x + 2.0f * cos(1.9635f), center_y + 2.0f * sin(1.9635f));
 			glEnd();
 		}
 	}
@@ -122,6 +135,18 @@ public:
 	{
 		if(player == 1) p1_score++;
 		else if(player == 2) p2_score++;
+	}
+	int check_winner()
+	{
+		if(p1_score == 12)
+			return 1;
+		else if(p2_score == 12)
+			return 2;
+		else return -1;
+	}
+	void reset_the_score()
+	{
+		p1_score = p2_score = 0;
 	}
 	void message(const char *_msg)
 	{
