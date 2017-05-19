@@ -1,3 +1,7 @@
+/* 
+	* Author: Manjunath M
+	* Email: manjunath.bsk3@gmail.com
+*/
 #include"Events.h"
 int main(int argc,char **argv)
 {

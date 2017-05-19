@@ -1,3 +1,10 @@
+/*
+	* This header contains the class definitions of all the major objects used in this project.
+	*
+	* Author: Manjunath M
+	* Email: manjunath.bsk3@gmail.com
+*/
+
 #include<GL/glut.h>
 #include<stdio.h>
 #include<math.h>
