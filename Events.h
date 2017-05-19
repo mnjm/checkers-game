@@ -1,5 +1,6 @@
 #include"Objects.h"
 #include<math.h>
+#include<stdio.h>
 bool is_first_time = true;
 bool is_fullscreen = false;
 GLint window_width,window_height,window_start_x,window_start_y;
@@ -11,6 +12,12 @@ extern bool is_player2_turn;
 int board[8][8];
 void init()
 {
+	is_first_time = true;
+	is_fullscreen = false;
+	pawn_selected = -1;
+	is_player2_turn = false;
+	score_board_obj.reset_the_score();
+	score_board_obj.message("Player 1's Turn");
 	int count = 0;
 	for(int i = 1; i<8; i+=2)
 		board[i][0] = -1;
@@ -36,6 +43,20 @@ void init()
 			board[i][j] = count++;
 			board[i][j+1] = -1;
 		}
+	}
+}
+void fullscreen()
+{
+	if( is_fullscreen ) // Enter Fullscreen
+	{
+		is_fullscreen = false;
+		glutReshapeWindow(window_width,window_height);
+		glutPositionWindow(250,15);
+	}
+	else
+	{
+		is_fullscreen = true;
+		glutFullScreen();
 	}
 }
 void display_event_handler()
@@ -86,18 +107,13 @@ void reshape_event_handler(int w,int h)
 }
 void keyboard_event_handler(unsigned char ch,int x,int y)
 {
-	if ( ch == 'q' || ch == 'Q' ) exit(0);
+	if ( ch == 'q' || ch == 'Q' )
+		exit(0);
 	else if ( ch == 'r' || ch == 'R' ) 
-	{
-		is_first_time = true;
-		is_fullscreen = false;
-		pawn_selected = -1;
-		is_player2_turn = false;
 		init();
-		score_board_obj.reset_the_score();
-		score_board_obj.message("Player 1's Turn");
-		glutPostRedisplay();
-	}
+	else if ( ch == 'f' || ch == 'F' )
+		fullscreen();
+
 }
 void check_king_pawn(int selected_pawn)
 {
@@ -392,33 +408,11 @@ void mouse_event_handler(int button,int action,int x,int y)
 }
 void popupmenu_handler(int id)
 {
-	if(id == 1) // Enter Fullscreen
-	{
-		if(is_fullscreen) return;
-		is_fullscreen = true;
-		glutFullScreen();
-	}
-	else if(id == 2) // Exit Fullscreen
-	{
-		if( !is_fullscreen )
-			return;
-		is_fullscreen = false;
-		glutReshapeWindow(window_width,window_height);
-		glutPositionWindow(250,15);
-	}
+	if( id == 1 ) // Enter or Exit Fullscreen
+		fullscreen(); 
 	else if(id == 3) // Restart the Game.
-	{
-		is_first_time = true;
-		is_fullscreen = false;
-		pawn_selected = -1;
-		is_player2_turn = false;
 		init();
-		score_board_obj.reset_the_score();
-		score_board_obj.message("Player 1's Turn");
-		glutPostRedisplay();
-	}
 	else if(id == 4) // Quit from the game.
-	{
 		exit(0);
-	}
+	glutPostRedisplay();
 }

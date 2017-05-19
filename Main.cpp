@@ -11,10 +11,9 @@ int main(int argc,char **argv)
 	glutMouseFunc(mouse_event_handler);
 	glutKeyboardFunc(keyboard_event_handler);
 	glutCreateMenu(popupmenu_handler);
-	glutAddMenuEntry("Enter Fullscreen",1);
-	glutAddMenuEntry("Leave Fullscreen",2);
-	glutAddMenuEntry("Restart Game",3);
-	glutAddMenuEntry("Exit/Quit",4);
+	glutAddMenuEntry("Toggle Fullscreen [F/f]",1);
+	glutAddMenuEntry("Restart Game [R/r]",3);
+	glutAddMenuEntry("Exit/Quit [Q/q]",4);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 	glutMainLoop();
 	return 0;
