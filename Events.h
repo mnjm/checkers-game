@@ -7,6 +7,7 @@
 #include"Objects.h"
 #include<math.h>
 #include<stdio.h>
+bool is_rules_displayed = true;
 bool is_first_time = true;
 bool is_fullscreen = false;
 GLint window_width,window_height,window_start_x,window_start_y;
@@ -16,6 +17,7 @@ Pawn pawns[24];
 int pawn_selected = -1;
 extern bool is_player2_turn;
 int board[8][8];
+void popupmenu_handler(int);
 void init()
 {
 	is_first_time = true;
@@ -50,6 +52,11 @@ void init()
 			board[i][j+1] = -1;
 		}
 	}
+	glutCreateMenu(popupmenu_handler);
+	glutAddMenuEntry("Toggle Fullscreen [F/f]",1);
+	glutAddMenuEntry("Restart Game [R/r]",3);
+	glutAddMenuEntry("Exit/Quit [Q/q]",4);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 void fullscreen()
 {
@@ -68,7 +75,12 @@ void fullscreen()
 void display_event_handler()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glClearColor(1.0f,1.0f,1.0f,0.0f);
+	if(is_rules_displayed) 
+	{
+		draw_rules();
+		return;
+	}
 	board_obj.draw();
 	if(is_first_time) { init(); is_first_time = false; }
 	int winner = score_board_obj.check_winner();
@@ -115,11 +127,15 @@ void keyboard_event_handler(unsigned char ch,int x,int y)
 {
 	if ( ch == 'q' || ch == 'Q' )
 		exit(0);
-	else if ( ch == 'r' || ch == 'R' ) 
-		init();
 	else if ( ch == 'f' || ch == 'F' )
 		fullscreen();
-
+	else if( is_rules_displayed && (ch == 's' || ch == 'S') )
+	{
+		is_rules_displayed = false;
+		glutPostRedisplay();
+	}
+	else if( !is_rules_displayed && ( ch == 'r' || ch == 'R' ) )
+		init();
 }
 void check_king_pawn(int selected_pawn)
 {
@@ -132,16 +148,24 @@ void mouse_event_handler(int button,int action,int x,int y)
 {
 	if(button == GLUT_LEFT_BUTTON && action == GLUT_DOWN)
 	{
-		glutPostRedisplay(); // Registering Display Event.
-
 		// Calculate The Indexes
 		x-= window_start_x; // If clicked out of board.
 		y = window_height -y; y-= window_start_y;
+		glutPostRedisplay(); // Registering Display Event.
+		if( is_rules_displayed )
+		{
+			float i = y / 77.7777777777777;
+			float j = x / 87.5;
+			if( i > 0 && i < 0.5 && j > 0 && j < 0.8 )
+				exit(0);
+			else if(i > 0 && i < 0.5 && j > 7.0 && j < 8.0)
+				is_rules_displayed = false;
+			return;
+		}
 		int i = (int)floor(y / (77.777777777777777));
 		int j = (int)floor(x / 87.5);
 
 		if( i >= 8 ) return;
-
 		if( i%2 != j%2) { score_board_obj.message("Wrong Move!"); return; } // Checking if the Shaded Cube is selected.
 		if(is_player2_turn == false)
 		{ 

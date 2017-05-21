@@ -4,13 +4,42 @@
 	* Author: Manjunath M
 	* Email: manjunath.bsk3@gmail.com
 */
-
+/*
+	* ------------------------------Including Header Files-----------------------------------
+*/
 #include<GL/glut.h>
-#include<stdio.h>
-#include<math.h>
+#include<stdio.h> // For sprintf_s function
+#include<math.h> // For cos and sin functions
 GLfloat cos_vals[] = {1.0f,0.980067f,0.921061f,0.825336f,0.696707f,0.540302f,0.362358f,0.169967f,-0.0291997f,-0.227202f,-0.416147f,-0.588501f,-0.737394f,-0.856889f,-0.942222f,-0.989993f,-0.998295f,-0.966798f,-0.896758f,-0.790967f,-0.653643f,-0.490261f,-0.307333f,-0.112153f,0.0874987f,0.283662f,0.468516f,0.634692f,0.775565f,0.885519f,0.96017f,0.996542f};
 GLfloat sin_vals[] = {0.0f,0.198669f,0.389418f,0.564642f,0.717356f,0.841471f,0.932039f,0.98545f,0.999574f,0.973848f,0.909297f,0.808496f,0.675463f,0.515501f,0.334988f,0.14112f,-0.0583747f,-0.255542f,-0.442521f,-0.611858f,-0.756803f,-0.871576f,-0.951602f,-0.993691f,-0.996165f,-0.958924f,-0.883455f,-0.772765f,-0.631267f,-0.464603f,-0.279417f,-0.083091f};
 bool is_player2_turn = false;
+/*
+	*-------------------------------Type Function------------------------------------------
+	* This function is to print the text string on the Screen.
+	* The str pointer is the string that needs to be printed.
+	* x and y are the starting position where the text should be printed.
+	* sx and xy are the scaling values to resize the text.
+	* lineWidth is to specify the boldness of the text. default = 3.0f.
+*/
+void type(const char *str,double x,double y,double sx,double sy,GLfloat lineWidth = 3.0f)
+{
+	glPushMatrix();
+	glTranslated(x,y,0.0);
+	glScaled(sx,sy,0.0);
+	glLineWidth(lineWidth);
+	while(*str != NULL)
+	{
+		if( *str == '\n')
+		{
+			glPopMatrix();
+			type(++str,x,y-3.0,sx,sy,lineWidth);
+			return;
+		}
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, (int) *str);
+		str++;
+	}
+	glPopMatrix();
+}
 class Board
 {
 public:
@@ -120,19 +149,6 @@ private:
 	unsigned int p2_score;
 	int which_player_turn;
 	char msg[100];
-	void type(const char *str,double x,double y,double sx,double sy)
-	{
-		glPushMatrix();
-		glTranslated(x,y,0.0);
-		glScaled(sx,sy,0.0);
-		glLineWidth(3.0f);
-		while(*str != NULL)
-		{
-			glutStrokeCharacter(GLUT_STROKE_ROMAN, (int) *str);
-			str++;
-		}
-		glPopMatrix();
-	}
 public:
 	Score_Board()
 	{
@@ -189,6 +205,55 @@ public:
 		type(buff,21.0,+43.0,0.022,0.022);
 
 		//Message
+		glColor3f(0.0,0.0,0.0);
+		glBegin(GL_QUADS);
+		glVertex2f(-20.0f,+40.0f); glVertex2f(-20.0f,+50.0f);
+		glVertex2f(+20.0f,+50.0f); glVertex2f(+20.0f,+40.0f); 
+		glEnd();
+		glColor3d(1.0,1.0,1.0);
 		type(msg,-14.0,+44.0,0.03,0.03);
 	}
 };
+void draw_rules()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(1.0,1.0,1.0,1.0);
+	glColor3f(0.0f,0.0f,0.0f);
+	
+	type("Checkers Game",-15.0,46.0,0.03,0.03,3.0f);
+	glBegin(GL_LINES); glVertex2f(-15.0,45.0); glVertex2f(+15.0,45.0); glEnd();
+
+	type("Rules:",-39.0,42.0,0.02,0.02,2.0f);
+	glBegin(GL_LINES); glVertex2f(-39.0,41.25); glVertex2f(-32.5,41.25); glEnd();
+
+	type("1. The Player 1's pawn are brown colored and Player 2's\n  blue colored.\
+		\n2. From here onwards pawns are referred as Mens/Kings.\
+		\n3. Only dark squares are accessable for both the Players.\
+		\n4. Players should take turn moving their Mens/Kings.\
+		\n5. Player can move their man diagonally to immediate\n  square towards opponent side.\
+		\n6. If one player's man, other player's man and a empty\n  square are lined up diagonally then the first player can\n  'jump' over other players's man.\
+		\n7. If jump move is performed, the man who got jumped\n  is out of the game and considered as score to the\n  Player whose man jumped.\
+		\n8. The man travelled to the opponent's end (king zone) will\n  be crowned as king.\
+		\n9. The kings can move/jump in both the directions.",-39.0,38.0,0.02,0.02,2.0f);
+
+	type("Input:",-39.0,-12.0,0.02,0.02,2.0f);
+	glBegin(GL_LINES); glVertex2f(-39.0,-12.45); glVertex2f(-33.5,-12.45); glEnd();
+	type("1. Left Mouse Click for selection, move and jump\
+		 \n2. Right Mouse Click for Popup Menus.\
+		 \n3. 'Q'/'q' to Quit.\
+		 \n4. 'R'/'r' to Restart the Game.\
+		 \n5. 'F'/'f' to toggle Full screen.\
+		 \n\nNow click 'Start' button to start the game.",-39.0,-15.25,0.02,0.02,2.0f);
+
+	glBegin(GL_QUADS);
+	glVertex2f(-32.0f,-35.0f); glVertex2f(-40.0f,-35.0f); glVertex2f(-40.0f,-40.0f); glVertex2f(-32.0f,-40.0f); 
+	glVertex2f(+30.0f,-35.0f); glVertex2f(+40.0f,-35.0f); glVertex2f(+40.0f,-40.0f); glVertex2f(+30.0f,-40.0f); 
+	glEnd();
+
+	glColor3f(1.0f,1.0f,1.0f);
+	type("Quit",-38.5,-38.5,0.02,0.02,2.0f);
+	type("Start",+32.5,-38.5,0.02,0.02,2.0f);
+	glBegin(GL_LINES); glVertex2f(-38.5,-39.0); glVertex2f(-37.0,-39.0); glEnd();
+	glBegin(GL_LINES); glVertex2f(+32.5,-39.0); glVertex2f(+34.0,-39.0); glEnd();
+	glutSwapBuffers();
+}
