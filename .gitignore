@@ -1,3 +1,7 @@
 *.vcxproj
 *.vcxproj.filters
 Debug/
+*.sdf
+*.sln
+*.suo
+*.vcxproj.user

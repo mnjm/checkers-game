@@ -55,8 +55,8 @@ public:
 			for(int j = 0; j < 8; j++)
 			{
 				glBegin(GL_QUADS);
-				if(color == 0) { glColor3f(1.0f,1.0f,1.0f); color = 1; }
-				else { glColor3f(0.403921f,0.403921f,0.403921f); color = 0; }
+				if(color == 0) { glColor3f(0.0f,0.34901f,0.0f); color = 1; }
+				else { glColor3f(0.5f,1.0f,0.0f); color = 0; }
 				x = -40.0f + ( i * 10);
 				y = -40.0f + ( j * 10);
 				glVertex2f(x, y);
