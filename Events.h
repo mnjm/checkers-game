@@ -8,8 +8,10 @@
 #include<math.h>
 #include<stdio.h>
 bool is_rules_displayed = true;
+bool popup_not_registered = true;
 bool is_first_time = true;
 bool is_fullscreen = false;
+bool is_game_won = false;
 GLint window_width,window_height,window_start_x,window_start_y;
 Board board_obj;
 Score_Board score_board_obj;
@@ -52,30 +54,20 @@ void init()
 			board[i][j+1] = -1;
 		}
 	}
-	glutCreateMenu(popupmenu_handler);
-	glutAddMenuEntry("Toggle Fullscreen [F/f]",1);
-	glutAddMenuEntry("Restart Game [R/r]",3);
-	glutAddMenuEntry("Exit/Quit [Q/q]",4);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-}
-void fullscreen()
-{
-	if( is_fullscreen ) // Enter Fullscreen
+	if( popup_not_registered )
 	{
-		is_fullscreen = false;
-		glutReshapeWindow(window_width,window_height);
-		glutPositionWindow(250,15);
-	}
-	else
-	{
-		is_fullscreen = true;
-		glutFullScreen();
+		glutCreateMenu(popupmenu_handler);
+		glutAddMenuEntry("Restart Game [R/r]",3);
+		glutAddMenuEntry("Exit/Quit [Q/q]",4);
+		glutAttachMenu(GLUT_RIGHT_BUTTON);
+		popup_not_registered = false;
 	}
 }
 void display_event_handler()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(1.0f,1.0f,1.0f,0.0f);
+	draw_border();
 	if(is_rules_displayed) 
 	{
 		draw_rules();
@@ -87,6 +79,8 @@ void display_event_handler()
 	if(winner == 1)
 	{
 		score_board_obj.draw();
+		for(int i = 0; i<24; i++)
+			pawns[i].draw();
 		score_board_obj.message("Player 1 wins");
 		glutSwapBuffers();
 		return;
@@ -94,7 +88,9 @@ void display_event_handler()
 	else if(winner == 2)
 	{
 		score_board_obj.draw();
-		score_board_obj.message("Player 1 wins");
+		for(int i = 0; i<24; i++)
+			pawns[i].draw();
+		score_board_obj.message("Player 2 wins");
 		glutSwapBuffers();
 		return;
 	}
@@ -120,15 +116,13 @@ void reshape_event_handler(int w,int h)
 	glViewport(window_start_x,window_start_y,700,700);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-40,40,-40,50);
+	gluOrtho2D(-41,41,-41,51);
 	glMatrixMode(GL_MODELVIEW);
 }
 void keyboard_event_handler(unsigned char ch,int x,int y)
 {
 	if ( ch == 'q' || ch == 'Q' )
 		exit(0);
-	else if ( ch == 'f' || ch == 'F' )
-		fullscreen();
 	else if( is_rules_displayed && (ch == 's' || ch == 'S') )
 	{
 		is_rules_displayed = false;
@@ -154,8 +148,8 @@ void mouse_event_handler(int button,int action,int x,int y)
 		glutPostRedisplay(); // Registering Display Event.
 		if( is_rules_displayed )
 		{
-			float i = y / 77.7777777777777;
-			float j = x / 87.5;
+			float i = y / 77.7777777777777f;
+			float j = x / 87.5f;
 			if( i > 0 && i < 0.5 && j > 0 && j < 0.8 )
 				exit(0);
 			else if(i > 0 && i < 0.5 && j > 7.0 && j < 8.0)
@@ -438,9 +432,7 @@ void mouse_event_handler(int button,int action,int x,int y)
 }
 void popupmenu_handler(int id)
 {
-	if( id == 1 ) // Enter or Exit Fullscreen
-		fullscreen(); 
-	else if(id == 3) // Restart the Game.
+	if(id == 3) // Restart the Game.
 		init();
 	else if(id == 4) // Quit from the game.
 		exit(0);

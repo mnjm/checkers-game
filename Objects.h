@@ -116,7 +116,7 @@ public:
 		glEnd();
 		if(is_selected)
 		{
-			glColor3f(0.0f,0.0f,0.0f);
+			glColor3f(1.0f,1.0f,0.0f);
 			glLineWidth(2);
 			glBegin(GL_LINE_LOOP);
 			draw_circle(center_x,center_y,4.9f);
@@ -216,8 +216,10 @@ public:
 };
 void draw_rules()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(1.0,1.0,1.0,1.0);
+	glColor3f(0.5f,1.0f,0.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(-40.0f,-40.0f);glVertex2f(-40.0f,+50.0f);glVertex2f(+40.0f,+50.0f);glVertex2f(+40.0f,-40.0f);
+	glEnd();
 	glColor3f(0.0f,0.0f,0.0f);
 	
 	type("Checkers Game",-15.0,46.0,0.03,0.03,3.0f);
@@ -227,9 +229,9 @@ void draw_rules()
 	glBegin(GL_LINES); glVertex2f(-39.0,41.25); glVertex2f(-32.5,41.25); glEnd();
 
 	type("1. The Player 1's pawn are brown colored and Player 2's\n  blue colored.\
-		\n2. From here onwards pawns are referred as Mens/Kings.\
+		\n2. From here onwards pawns are referred as Men/Kings.\
 		\n3. Only dark squares are accessable for both the Players.\
-		\n4. Players should take turn moving their Mens/Kings.\
+		\n4. Players should take turn moving their Men/Kings.\
 		\n5. Player can move their man diagonally to immediate\n  square towards opponent side.\
 		\n6. If one player's man, other player's man and a empty\n  square are lined up diagonally then the first player can\n  'jump' over other players's man.\
 		\n7. If jump move is performed, the man who got jumped\n  is out of the game and considered as score to the\n  Player whose man jumped.\
@@ -237,13 +239,12 @@ void draw_rules()
 		\n9. The kings can move/jump in both the directions.",-39.0,38.0,0.02,0.02,2.0f);
 
 	type("Input:",-39.0,-12.0,0.02,0.02,2.0f);
-	glBegin(GL_LINES); glVertex2f(-39.0,-12.45); glVertex2f(-33.5,-12.45); glEnd();
+	glBegin(GL_LINES); glVertex2f(-39.0f,-12.45f); glVertex2f(-33.5f,-12.45f); glEnd();
 	type("1. Left Mouse Click for selection, move and jump\
 		 \n2. Right Mouse Click for Popup Menus.\
 		 \n3. 'Q'/'q' to Quit.\
 		 \n4. 'R'/'r' to Restart the Game.\
-		 \n5. 'F'/'f' to toggle Full screen.\
-		 \n\nNow click 'Start' button to start the game.",-39.0,-15.25,0.02,0.02,2.0f);
+		 \n\nNow, Click 'Start' button to start the game.",-39.0,-15.25,0.02,0.02,2.0f);
 
 	glBegin(GL_QUADS);
 	glVertex2f(-32.0f,-35.0f); glVertex2f(-40.0f,-35.0f); glVertex2f(-40.0f,-40.0f); glVertex2f(-32.0f,-40.0f); 
@@ -256,4 +257,11 @@ void draw_rules()
 	glBegin(GL_LINES); glVertex2f(-38.5,-39.0); glVertex2f(-37.0,-39.0); glEnd();
 	glBegin(GL_LINES); glVertex2f(+32.5,-39.0); glVertex2f(+34.0,-39.0); glEnd();
 	glutSwapBuffers();
+}
+void draw_border()
+{
+	glColor3f(0.69411f,0.22745f,0.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(-41.0f,-41.0f);glVertex2f(-41.0f,51.0f);glVertex2f(+41.0f,+51.0f);glVertex2f(+41.0f,-41.0f);
+	glEnd();
 }
