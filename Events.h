@@ -130,6 +130,7 @@ void keyboard_event_handler(unsigned char ch,int x,int y)
 	}
 	else if( !is_rules_displayed && ( ch == 'r' || ch == 'R' ) )
 		init();
+	glutPostRedisplay();
 }
 void check_king_pawn(int selected_pawn)
 {
