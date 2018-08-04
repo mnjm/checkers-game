@@ -2,7 +2,6 @@
 	* This header contains the Event handlers and other functions. The checker algorithm is defined in this header in mouse event handler.
 	*
 	* Author: Manjunath M
-	* Email: manjunath.bsk3@gmail.com
 */
 #include"Objects.h"
 #include<math.h>
