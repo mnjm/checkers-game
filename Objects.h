@@ -27,7 +27,7 @@ void type(const char *str,double x,double y,double sx,double sy,GLfloat lineWidt
 	glTranslated(x,y,0.0);
 	glScaled(sx,sy,0.0);
 	glLineWidth(lineWidth);
-	while(*str != NULL)
+	while(*str != '\0')
 	{
 		if( *str == '\n')
 		{
@@ -154,7 +154,8 @@ public:
 	{
 		which_player_turn = 1;
 		p1_score = p2_score = 0;
-		sprintf_s(msg,"Player 1's Turn");
+		/* sprintf_s(msg,"Player 1's Turn"); */
+        snprintf(msg,100,"Player 1's Turn");
 	}
 	void increment_score(int player)
 	{
@@ -175,7 +176,8 @@ public:
 	}
 	void message(const char *_msg)
 	{
-		sprintf_s(msg,"%s",_msg);
+		/* sprintf_s(msg,"%s",_msg); */
+        snprintf(msg, 100, "%s", _msg);
 	}
 	void draw()
 	{
@@ -189,7 +191,8 @@ public:
 		if(is_player2_turn) type("Player 1",-39.0,+47.0,0.025,0.025);
 		else type("Player 1 *",-39.0,+47.0,0.025,0.025);
 		char buff[30];
-		sprintf_s(buff,"Score: %d",p1_score);
+		/* sprintf_s(buff,"Score: %d",p1_score); */
+        snprintf(buff,30, "Score:%d", p1_score);
 		type(buff,-39.0,+43.0,0.022,0.022);
 
 		// Player 2
@@ -201,7 +204,8 @@ public:
 		glColor3d(1.0,1.0,1.0);
 		if(is_player2_turn) type("Player 2 *",21.0,+47.0,0.025,0.025);
 		else type("Player 2",21.0,+47.0,0.025,0.025);
-		sprintf_s(buff,"Score: %d",p2_score);
+		snprintf(buff,30,"Score: %d",p2_score);
+		/* sprintf_s(buff,"Score: %d",p2_score); */
 		type(buff,21.0,+43.0,0.022,0.022);
 
 		//Message
