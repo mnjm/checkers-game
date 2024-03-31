@@ -8,7 +8,7 @@ Checkers Game Implemented using C++ and OpenGL
 ### Dependency
 GLUT and OpenGL
 ### On debian (for ex Ubuntu)
-```
+```bash
 sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev -y
 make
 ```
