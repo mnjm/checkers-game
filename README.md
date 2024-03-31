@@ -1,8 +1,8 @@
 # Checkers_Game
 Checkers Game Implemented using C++ and OpenGL
 
-## Screenshots
-
+## Demo
+![Demo.gif](./demo.gif)
 
 ## Insall / Build
 ### Dependency
